@@ -1,0 +1,3 @@
+package com.cybertrace.service;
+import com.cybertrace.model.User; import com.cybertrace.repository.UserRepository; import org.springframework.stereotype.Service; import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; import java.util.*;
+@Service public class UserService { private final UserRepository repo; private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(); public UserService(UserRepository repo){this.repo=repo;} public User createUser(String u,String e,String p){return repo.save(new User(u,e,encoder.encode(p)));} public long count(){return repo.count();} public List<User> all(){return repo.findAll();} }

@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: cybertrace
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me}
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+  backend:
+    build: ./backend
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      AI_SERVICE_URL: http://ai-service:8000
+    ports: ["8080:8080"]
+    depends_on: [postgres, ai-service]
+  ai-service:
+    build: ./ai-service
+    ports: ["8000:8000"]
+  frontend:
+    build: ./frontend
+    ports: ["5173:5173"]
+    depends_on: [backend]
+volumes:
+  pgdata:
